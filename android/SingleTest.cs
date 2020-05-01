@@ -17,13 +17,15 @@ namespace android
     [Test]
     public void searchWikipedia()
     {
-      AndroidElement searchElement = (AndroidElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(MobileBy.AccessibilityId("Search Wikipedia")));
-      searchElement.Click();
-      AndroidElement insertTextElement = (AndroidElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(By.Id("org.wikipedia.alpha:id/search_src_text")));
-      insertTextElement.SendKeys("BrowserStack");
+
+      IWebElement searchElement2 = driver.FindElement(MobileBy.AccessibilityId("Search Wikipedia"));
+      searchElement2.Click();
+
+      IWebElement insertTextElement2 = driver.FindElement(By.Id("org.wikipedia.alpha:id/search_src_text"));
+      insertTextElement2.SendKeys("Browserstack");
       Thread.Sleep(5000);
 
-      ReadOnlyCollection<AndroidElement> allProductsName = driver.FindElements(By.ClassName("android.widget.TextView"));
+      ReadOnlyCollection<IWebElement> allProductsName = (ReadOnlyCollection<IWebElement>)driver.FindElements(By.ClassName("android.widget.TextView"));
       Assert.True(allProductsName.Count > 0);
     }
   }

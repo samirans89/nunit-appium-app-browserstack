@@ -8,7 +8,7 @@ using OpenQA.Selenium.Support.UI;
 
 namespace android
 {
-    [TestFixture("local", "galaxy-s7")]
+    [TestFixture("local", "galaxy-s9")]
     public class LocalTest : BrowserStackNUnitTest
     {
         public LocalTest(string profile, string device) : base(profile,device){ }
@@ -16,15 +16,15 @@ namespace android
         [Test]
         public void testLocal()
         {
-            AndroidElement searchElement = (AndroidElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(By.Id("com.example.android.basicnetworking:id/test_action")));
+            IWebElement searchElement = new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(By.Id("com.example.android.basicnetworking:id/test_action")));
             searchElement.Click();
-            AndroidElement testElement = (AndroidElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(By.ClassName("android.widget.TextView")));
+            IWebElement testElement = new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.ElementToBeClickable(By.ClassName("android.widget.TextView")));
 
-            ReadOnlyCollection<AndroidElement> allTextViewElements = driver.FindElements(By.ClassName("android.widget.TextView"));
+            ReadOnlyCollection<IWebElement> allTextViewElements = driver.FindElements(By.ClassName("android.widget.TextView"));
 
             Thread.Sleep(5000);
 
-            foreach (AndroidElement textElement in allTextViewElements)
+            foreach (IWebElement textElement in allTextViewElements)
             {
                 if (textElement.Text.Contains("The active connection is"))
                 {

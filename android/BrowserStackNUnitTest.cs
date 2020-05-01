@@ -4,14 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
-using OpenQA.Selenium.Appium.Android;
 using BrowserStack;
 
 namespace android
 {
 	public class BrowserStackNUnitTest
 	{
-		protected AndroidDriver<AndroidElement> driver;
+		protected RemoteWebDriver driver;
 		protected string profile;
 		protected string device;
 		private Local browserStackLocal;
@@ -28,16 +27,16 @@ namespace android
 			NameValueCollection caps = ConfigurationManager.GetSection("capabilities/" + profile) as NameValueCollection;
 			NameValueCollection devices = ConfigurationManager.GetSection("environments/" + device) as NameValueCollection;
 
-			DesiredCapabilities capability = new DesiredCapabilities();
+			DesiredCapabilities capabilities = new DesiredCapabilities();
 
 			foreach (string key in caps.AllKeys)
-			{  
-				capability.SetCapability(key, caps[key]);
+			{
+				capabilities.SetCapability(key, caps[key]);
 			}
 
 			foreach (string key in devices.AllKeys)
 			{
-				capability.SetCapability(key, devices[key]);
+				capabilities.SetCapability(key, devices[key]);
 			}
 
 			String username = Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME");
@@ -52,35 +51,36 @@ namespace android
 				accesskey = ConfigurationManager.AppSettings.Get("key");
 			}
 
-			capability.SetCapability("browserstack.user", username);
-			capability.SetCapability("browserstack.key", accesskey);
+			capabilities.SetCapability("browserstack.user", username);
+			capabilities.SetCapability("browserstack.key", accesskey);
 
-			String appId = Environment.GetEnvironmentVariable("BROWSERSTACK_APP_ID");
-			if (appId != null)
+			Object local_cap = capabilities.GetCapability("browserstack.local");
+			if (local_cap != null && local_cap.ToString().Equals("true"))
 			{
-				capability.SetCapability("app", appId);
-			}
-
-			if (capability.GetCapability("browserstack.local") != null && capability.GetCapability("browserstack.local").ToString() == "true")
-			{
-				browserStackLocal = new Local();
+				//browserStackLocal = new Local();
 				List<KeyValuePair<string, string>> bsLocalArgs = new List<KeyValuePair<string, string>>() {
 						new KeyValuePair<string, string>("key", accesskey)
 				};
-				browserStackLocal.start(bsLocalArgs);
+                // BrowserStackLocal.exe file won't work on Mac.
+                //Language Bindings attempts to start the 'exe' file.
+                //For Mac, please start BrowserStackLocal Mac binary separately on command line.
+
+                //browserStackLocal.start(bsLocalArgs);
 			}
 
-			driver = new AndroidDriver<AndroidElement>(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"), capability);
+
+			String hubUrl = "http://" + ConfigurationManager.AppSettings.Get("user") + ":" + ConfigurationManager.AppSettings.Get("key") + "@" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/";
+			driver = new RemoteWebDriver(new Uri(hubUrl), capabilities);
 		}
 
 		[TearDown]
 		public void Cleanup()
 		{
 			driver.Quit();
-			if (browserStackLocal != null)
-			{
+			//if (browserStackLocal != null)
+			//{
 				browserStackLocal.stop();
-			}
+			//}
 		}
 
 	}
