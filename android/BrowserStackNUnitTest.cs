@@ -68,8 +68,9 @@ namespace android
                 //browserStackLocal.start(bsLocalArgs);
 			}
 
-
-			String hubUrl = "http://" + ConfigurationManager.AppSettings.Get("user") + ":" + ConfigurationManager.AppSettings.Get("key") + "@" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/";
+            
+			String hubUrl = "http://" + username + ":" + accesskey + "@" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/";
+			Console.WriteLine(hubUrl);
 			driver = new RemoteWebDriver(new Uri(hubUrl), capabilities);
 		}
 
@@ -79,7 +80,7 @@ namespace android
 			driver.Quit();
 			//if (browserStackLocal != null)
 			//{
-				browserStackLocal.stop();
+//				browserStackLocal.stop();
 			//}
 		}
 

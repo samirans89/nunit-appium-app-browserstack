@@ -20,10 +20,10 @@ namespace android
     [Test]
     public void searchWikipedia()
     {
-      
-      IWebElement searchElement2 = driver.FindElement(MobileBy.AccessibilityId("Search Wikipedia"));
+      Thread.Sleep(5000);
+      IWebElement searchElement2 = driver.FindElement(By.XPath("(//android.widget.ImageView[@content-desc='Search Wikipedia'])[1]"));
       searchElement2.Click();
-      
+      Thread.Sleep(5000);
       IWebElement insertTextElement2 = driver.FindElement(By.Id("org.wikipedia.alpha:id/search_src_text"));
       insertTextElement2.SendKeys("Browserstack");
       Thread.Sleep(5000);
